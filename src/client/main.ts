@@ -40,10 +40,12 @@ function updateBreadcrumb(pipelineId: string): void {
   });
 }
 
-function buildLegend(): void {
+function buildLegend(nodes: Array<{ type: string }>): void {
   const el = document.getElementById("graph-legend")!;
-  const types = ["pipeline", "activity", "stored_procedure", "table", "dataverse_entity", "dataset"];
-  el.innerHTML = types
+  const present = new Set(nodes.map((n) => n.type));
+  const allTypes = ["pipeline", "activity", "stored_procedure", "table", "dataverse_entity", "dataset"];
+  const visible = allTypes.filter((t) => present.has(t));
+  el.innerHTML = visible
     .map((t) => `<span class="legend-item"><span class="legend-dot" style="background:${NODE_COLORS[t]}"></span>${NODE_LABELS[t]}</span>`)
     .join("");
 }
@@ -59,6 +61,7 @@ function showNeighborhood(pipelineId: string): void {
 
   document.getElementById("graph-empty")?.classList.add("hidden");
   updateBreadcrumb(pipelineId);
+  buildLegend(hood.nodes);
 
   if (activeCy) {
     activeCy.destroy();
@@ -109,8 +112,6 @@ async function init() {
     statusEl.textContent = "● Connected";
     statusEl.className = "connected";
     statsEl.textContent = `${graphData.stats.nodeCount} nodes total`;
-
-    buildLegend();
 
     const inspectorEl = document.getElementById("inspector")!;
 
