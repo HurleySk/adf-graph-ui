@@ -29,6 +29,7 @@ export function initNavigator(
         const header = document.createElement("div");
         header.className = "nav-group-header";
         header.textContent = `Other (${filtered.length})`;
+        header.classList.add("collapsed");
         header.addEventListener("click", () => {
           header.classList.toggle("collapsed");
           const list = header.nextElementSibling as HTMLElement;
@@ -38,6 +39,7 @@ export function initNavigator(
 
         const list = document.createElement("div");
         list.className = "nav-group-children";
+        list.style.display = "none";
         for (const orphan of filtered) {
           appendItems(list, orphan, 0, lc);
         }

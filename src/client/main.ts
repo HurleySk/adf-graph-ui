@@ -14,7 +14,7 @@ let currentDirection: "TB" | "LR" = "TB";
 
 function buildLegend(): void {
   const el = document.getElementById("graph-legend")!;
-  const types = ["pipeline", "stored_procedure", "table", "dataverse_entity", "dataset"];
+  const types = ["pipeline", "activity", "stored_procedure", "table", "dataverse_entity", "dataset"];
   el.innerHTML = types
     .map((t) => `<span class="legend-item"><span class="legend-dot" style="background:${NODE_COLORS[t]}"></span>${NODE_LABELS[t]}</span>`)
     .join("");
