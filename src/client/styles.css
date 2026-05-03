@@ -192,6 +192,16 @@ main { display: flex; flex: 1; overflow: hidden; }
 
 .nav-item:hover { color: var(--ink); background: var(--surface); }
 
+.nav-count {
+  float: right;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--ink-ghost);
+  margin-left: 4px;
+}
+
+.nav-item.active .nav-count { color: var(--signal-blue); opacity: 0.6; }
+
 .nav-item.active {
   color: var(--signal-blue);
   background: rgba(77, 166, 255, 0.06);
@@ -225,6 +235,48 @@ main { display: flex; flex: 1; overflow: hidden; }
 #graph-empty.hidden { display: none; }
 .empty-hex { font-size: 56px; opacity: 0.06; margin-bottom: 16px; }
 #graph-empty p { font-family: var(--font-display); font-size: 18px; color: var(--ink-dim); }
+
+#breadcrumb {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 5;
+  font-family: var(--font-body);
+  font-size: 11px;
+}
+
+#breadcrumb:empty { display: none; }
+
+.crumb {
+  color: var(--ink-dim);
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.crumb:hover { color: var(--ink); background: var(--surface); }
+.crumb.active { color: var(--signal-blue); }
+.crumb-sep { color: var(--ink-ghost); font-size: 9px; }
+
+.graph-tooltip {
+  position: absolute;
+  display: none;
+  padding: 4px 10px;
+  background: rgba(8, 9, 12, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line-soft);
+  border-radius: 5px;
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--ink-bright);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
 
 #graph-legend {
   position: absolute;

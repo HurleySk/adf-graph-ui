@@ -121,6 +121,7 @@ const STYLE: Stylesheet[] = [
   {
     selector: "edge",
     style: {
+      label: "data(edgeType)",
       width: 1.5,
       "line-color": "#252a35",
       "target-arrow-color": "#252a35",
@@ -128,11 +129,43 @@ const STYLE: Stylesheet[] = [
       "curve-style": "bezier",
       "arrow-scale": 0.7,
       opacity: 0.6,
+      "font-size": 0,
+      "font-family": "'Overpass Mono', monospace",
+      color: "#50555f",
+      "text-rotation": "autorotate",
+      "text-margin-y": -8,
+      "text-outline-width": 2,
+      "text-outline-color": "#08090c",
+      "text-outline-opacity": 0.9,
     },
   },
   {
+    selector: "edge:active, edge:selected",
+    style: { "font-size": 8 },
+  },
+  {
+    selector: "edge[edgeType='executes']",
+    style: { "line-color": "#3a6a9f", "target-arrow-color": "#3a6a9f", width: 2, opacity: 0.8 },
+  },
+  {
+    selector: "edge[edgeType='contains']",
+    style: { "line-color": "#2a5080", "target-arrow-color": "#2a5080", "line-style": "dashed" },
+  },
+  {
+    selector: "edge[edgeType='calls_sp']",
+    style: { "line-color": "#6a50a0", "target-arrow-color": "#6a50a0" },
+  },
+  {
+    selector: "edge[edgeType='reads_from'], edge[edgeType='writes_to']",
+    style: { "line-color": "#2d6a45", "target-arrow-color": "#2d6a45", "line-style": "dotted" },
+  },
+  {
+    selector: "edge[edgeType='uses_dataset']",
+    style: { "line-color": "#8a4050", "target-arrow-color": "#8a4050", "line-style": "dashed" },
+  },
+  {
     selector: "edge.highlighted",
-    style: { width: 2.5, "line-color": "#5a6a7e", "target-arrow-color": "#5a6a7e", opacity: 1 },
+    style: { width: 2.5, "line-color": "#5a6a7e", "target-arrow-color": "#5a6a7e", opacity: 1, "font-size": 8 },
   },
   {
     selector: "edge.faded",

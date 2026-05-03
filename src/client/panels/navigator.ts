@@ -8,6 +8,7 @@ export function initNavigator(
   container: HTMLElement,
   tree: PipelineTree,
   onSelect: (pipelineId: string) => void,
+  edgeCounts?: Map<string, number>,
 ): NavigatorHandle {
   const searchInput = container.querySelector<HTMLInputElement>("#nav-search")!;
   const listEl = container.querySelector<HTMLElement>("#nav-list")!;
@@ -97,6 +98,13 @@ export function initNavigator(
     item.dataset.id = node.id;
     item.style.paddingLeft = `${12 + depth * 14}px`;
     item.textContent = node.name;
+    const count = edgeCounts?.get(node.id);
+    if (count) {
+      const badge = document.createElement("span");
+      badge.className = "nav-count";
+      badge.textContent = String(count);
+      item.appendChild(badge);
+    }
     item.addEventListener("click", () => onSelect(node.id));
     parent.appendChild(item);
 
@@ -118,6 +126,22 @@ export function initNavigator(
     if (e.key === "Escape") {
       searchInput.value = "";
       renderTree("");
+      return;
+    }
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const items = Array.from(listEl.querySelectorAll<HTMLElement>(".nav-item"));
+      if (items.length === 0) return;
+      const activeIdx = items.findIndex((el) => el.classList.contains("active"));
+      let next = e.key === "ArrowDown" ? activeIdx + 1 : activeIdx - 1;
+      if (next < 0) next = items.length - 1;
+      if (next >= items.length) next = 0;
+      const nextId = items[next].dataset.id;
+      if (nextId) onSelect(nextId);
+    }
+    if (e.key === "Enter") {
+      const active = listEl.querySelector<HTMLElement>(".nav-item.active");
+      if (active?.dataset.id) onSelect(active.dataset.id);
     }
   });
 
