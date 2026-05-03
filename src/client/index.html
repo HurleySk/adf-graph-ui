@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>adf-graph-ui</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+    <header id="toolbar">
+      <div class="toolbar-left">
+        <span class="logo">
+          <span class="logo-icon">⬡</span>
+          <span class="logo-text">adf-graph</span>
+        </span>
+      </div>
+      <div class="toolbar-center">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 20 20" width="14" height="14">
+            <circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <line x1="12.5" y1="12.5" x2="17" y2="17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <input id="search-input" type="text" placeholder="Search nodes..." spellcheck="false" autocomplete="off">
+          <kbd class="search-hint">Esc</kbd>
+        </div>
+        <div id="type-filters"></div>
+      </div>
+      <div class="toolbar-right">
+        <button id="layout-toggle" class="toolbar-btn" title="Toggle layout algorithm">Hierarchical</button>
+        <button id="refresh-btn" class="toolbar-btn" title="Refresh graph from adf-graph">
+          <svg class="refresh-icon" viewBox="0 0 16 16" width="14" height="14">
+            <path d="M13.65 2.35A8 8 0 1 0 16 8h-2a6 6 0 1 1-1.76-4.24L10 6h6V0l-2.35 2.35z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+    <main>
+      <div id="graph-container">
+        <div id="graph-legend"></div>
+      </div>
+      <aside id="inspector"></aside>
+    </main>
+    <footer id="status-bar">
+      <div class="status-left">
+        <span id="stats"></span>
+        <span class="status-sep">·</span>
+        <span id="environment"></span>
+      </div>
+      <div class="status-right">
+        <span id="connection-status" class="connected">● Connected</span>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>
