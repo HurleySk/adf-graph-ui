@@ -210,7 +210,7 @@ main { display: flex; flex: 1; overflow: hidden; }
 
 /* ── Graph Canvas ───────────────────────────── */
 
-#graph-container {
+#graph-wrapper {
   flex: 1;
   position: relative;
   background:
@@ -218,6 +218,12 @@ main { display: flex; flex: 1; overflow: hidden; }
     radial-gradient(circle 1px at center, var(--line-faint) 1px, transparent 1px),
     var(--void);
   background-size: 100%, 24px 24px, 100%;
+}
+
+#graph-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 #graph-empty {
@@ -228,7 +234,7 @@ main { display: flex; flex: 1; overflow: hidden; }
   align-items: center;
   justify-content: center;
   color: var(--ink-ghost);
-  z-index: 2;
+  z-index: 3;
   pointer-events: none;
 }
 
