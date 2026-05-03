@@ -23,7 +23,10 @@ function buildLegend(): void {
 function showNeighborhood(pipelineId: string): void {
   if (!graphData) return;
 
-  const hood = extractNeighborhood(graphData, pipelineId, 2);
+  let hood = extractNeighborhood(graphData, pipelineId, 2);
+  if (hood.nodes.length > 60) {
+    hood = extractNeighborhood(graphData, pipelineId, 1);
+  }
   const container = document.getElementById("graph-container")!;
 
   document.getElementById("graph-empty")?.classList.add("hidden");
