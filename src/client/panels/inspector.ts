@@ -2,13 +2,20 @@ import { Core } from "cytoscape";
 import { NODE_COLORS } from "../graph/renderer.js";
 import { callTool } from "../api.js";
 import { applyImpactAnalysis, applyLineage, applyValidation, clearOverlays } from "../graph/overlays.js";
-import { focusNode } from "../graph/interactions.js";
+
+export interface InspectorHandle {
+  show: (nodeId: string, data: Record<string, unknown>) => void;
+  hide: () => void;
+  setCy: (cy: Core) => void;
+}
 
 export function initInspector(
   container: HTMLElement,
-  cy: Core,
-): { onNodeSelect: (id: string, data: Record<string, unknown>) => void; onNodeDeselect: () => void } {
-  function onNodeSelect(nodeId: string, data: Record<string, unknown>) {
+  initialCy: Core,
+): InspectorHandle {
+  let cy = initialCy;
+  function show(nodeId: string, data: Record<string, unknown>) {
+    container.classList.remove("collapsed");
     const color = NODE_COLORS[data.nodeType as string] ?? "#7a8899";
     const incoming = (data.incoming as any[]) ?? [];
     const outgoing = (data.outgoing as any[]) ?? [];
@@ -16,6 +23,7 @@ export function initInspector(
 
     container.innerHTML = `
       <div class="inspector-content">
+        <button class="inspector-close" title="Close (Esc)">×</button>
         <div class="inspector-header">
           <div class="inspector-dot" style="background:${color}"></div>
           <div>
@@ -68,10 +76,15 @@ export function initInspector(
       </div>
     `;
 
+    container.querySelector(".inspector-close")?.addEventListener("click", () => hide());
+
     container.querySelectorAll(".inspector-connection").forEach((el) => {
       el.addEventListener("click", () => {
         const id = (el as HTMLElement).dataset.nodeId;
-        if (id) focusNode(cy, id);
+        if (id) {
+          const node = cy.getElementById(id);
+          if (node.length > 0) { cy.animate({ center: { eles: node }, zoom: 2.5 } as any); node.select(); }
+        }
       });
     });
 
@@ -115,18 +128,20 @@ export function initInspector(
     });
   }
 
-  function onNodeDeselect() {
-    container.innerHTML = `
-      <div class="inspector-empty-state">
-        <div class="empty-icon">⬡</div>
-        <p>Select a node to inspect</p>
-        <p class="empty-hint">Click any node in the graph</p>
-      </div>
-    `;
+  function hide() {
+    container.classList.add("collapsed");
+    container.innerHTML = "";
   }
 
-  onNodeDeselect();
-  return { onNodeSelect, onNodeDeselect };
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") hide();
+  });
+
+  return {
+    show,
+    hide,
+    setCy(newCy: Core) { cy = newCy; },
+  };
 }
 
 function escapeHtml(str: string): string {
