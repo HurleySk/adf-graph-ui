@@ -1,5 +1,5 @@
 import { fetchGraph, GraphExport } from "./api.js";
-import { createGraph, NODE_COLORS, NODE_LABELS } from "./graph/renderer.js";
+import { createGraph, NODE_COLORS, NODE_LABELS, filterByType, runLayout } from "./graph/renderer.js";
 import { bindInteractions } from "./graph/interactions.js";
 import { initToolbar, ToolbarHandle } from "./panels/toolbar.js";
 import { initInspector } from "./panels/inspector.js";
@@ -42,6 +42,10 @@ function renderGraph(data: GraphExport): Core {
   buildLegend(document.getElementById("graph-legend")!);
 
   activeCy = createGraph(container, data);
+  (window as any).__cy = activeCy;
+
+  filterByType(activeCy, new Set(["pipeline"]));
+  runLayout(activeCy, "cose");
 
   const inspectorEl = document.getElementById("inspector")!;
   const inspector = initInspector(inspectorEl, activeCy);

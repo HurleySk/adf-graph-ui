@@ -5,7 +5,7 @@ import { callTool, fetchGraph } from "../api.js";
 
 const ALL_TYPES = [
   "pipeline", "activity", "stored_procedure", "table",
-  "dataverse_entity", "dataset", "linked_service", "key_vault_secret",
+  "dataverse_entity", "dataset", "linked_service",
 ];
 
 const TYPE_LABELS: Record<string, string> = {
@@ -28,7 +28,8 @@ export function initToolbar(
   initialCy: Core,
   onRefresh: (data: unknown) => void,
 ): ToolbarHandle {
-  const visibleTypes = new Set(ALL_TYPES);
+  const DEFAULT_VISIBLE = new Set(["pipeline"]);
+  const visibleTypes = new Set(DEFAULT_VISIBLE);
   let cy = initialCy;
 
   const searchInput = container.querySelector<HTMLInputElement>("#search-input")!;
@@ -39,7 +40,7 @@ export function initToolbar(
 
   for (const type of ALL_TYPES) {
     const btn = document.createElement("button");
-    btn.className = "filter-btn active";
+    btn.className = DEFAULT_VISIBLE.has(type) ? "filter-btn active" : "filter-btn";
     btn.dataset.type = type;
     btn.innerHTML = `<span class="filter-dot" style="background:${NODE_COLORS[type] ?? "#888"}"></span>${TYPE_LABELS[type] ?? type}`;
 

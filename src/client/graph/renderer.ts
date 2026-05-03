@@ -151,18 +151,21 @@ const STYLE: Stylesheet[] = [
 
 const DAGRE_LAYOUT: LayoutOptions = {
   name: "dagre",
-  rankDir: "LR",
-  nodeSep: 50,
-  rankSep: 100,
+  rankDir: "TB",
+  nodeSep: 30,
+  rankSep: 60,
   animate: false,
 } as LayoutOptions;
 
 const COSE_LAYOUT: LayoutOptions = {
   name: "cose",
   animate: false,
-  nodeRepulsion: () => 10000,
-  idealEdgeLength: () => 100,
-  gravity: 0.25,
+  nodeRepulsion: () => 50000,
+  idealEdgeLength: () => 120,
+  gravity: 0.1,
+  numIter: 300,
+  fit: true,
+  padding: 30,
 } as LayoutOptions;
 
 export function createGraph(container: HTMLElement, data: GraphExport): Core {
@@ -191,7 +194,7 @@ export function createGraph(container: HTMLElement, data: GraphExport): Core {
     container,
     elements,
     style: STYLE,
-    layout: DAGRE_LAYOUT,
+    layout: { name: "preset" } as LayoutOptions,
     minZoom: 0.05,
     maxZoom: 6,
     wheelSensitivity: 0.25,
@@ -204,7 +207,8 @@ export function createGraph(container: HTMLElement, data: GraphExport): Core {
 
 export function runLayout(cy: Core, layout: "dagre" | "cose"): void {
   const opts = layout === "dagre" ? DAGRE_LAYOUT : COSE_LAYOUT;
-  cy.layout(opts).run();
+  const visible = cy.nodes().filter((n) => n.style("display") !== "none");
+  visible.layout(opts).run();
 }
 
 export function filterByType(cy: Core, visibleTypes: Set<string>): void {
