@@ -173,9 +173,9 @@ export function renderNeighborhood(container: HTMLElement, hood: Neighborhood, d
     elements,
     style: STYLE,
     layout,
-    minZoom: 0.3,
-    maxZoom: 4,
-    wheelSensitivity: 0.3,
+    minZoom: 0.1,
+    maxZoom: 5,
+    wheelSensitivity: 0.8,
     boxSelectionEnabled: false,
     pixelRatio: "auto",
   });
