@@ -31,7 +31,7 @@ async function main() {
 
   const clientDir = resolve(__dirname, "../client");
   app.use(express.static(clientDir));
-  app.get("*", (_req, res) => {
+  app.use((_req, res) => {
     res.sendFile(resolve(clientDir, "index.html"));
   });
 
