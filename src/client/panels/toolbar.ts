@@ -19,12 +19,17 @@ const TYPE_LABELS: Record<string, string> = {
   key_vault_secret: "Secrets",
 };
 
+export interface ToolbarHandle {
+  setCy: (cy: Core) => void;
+}
+
 export function initToolbar(
   container: HTMLElement,
-  cy: Core,
+  initialCy: Core,
   onRefresh: (data: unknown) => void,
-): void {
+): ToolbarHandle {
   const visibleTypes = new Set(ALL_TYPES);
+  let cy = initialCy;
 
   const searchInput = container.querySelector<HTMLInputElement>("#search-input")!;
   const filtersContainer = container.querySelector<HTMLElement>("#type-filters")!;
@@ -99,4 +104,10 @@ export function initToolbar(
     layoutToggle.textContent = currentLayout === "dagre" ? "Hierarchical" : "Force";
     runLayout(cy, currentLayout);
   });
+
+  return {
+    setCy(newCy: Core) {
+      cy = newCy;
+    },
+  };
 }

@@ -8,10 +8,11 @@ import { createRouter } from "./api.js";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const port = parseInt(process.env.PORT ?? "3000", 10);
-const adfGraphPath = process.argv.includes("--npx")
-  ? undefined
-  : process.argv[process.argv.indexOf("--adf-graph-path") + 1] ?? "adf-graph";
 const useNpx = process.argv.includes("--npx");
+const adfGraphPathIdx = process.argv.indexOf("--adf-graph-path");
+const adfGraphPath = useNpx
+  ? undefined
+  : adfGraphPathIdx >= 0 ? process.argv[adfGraphPathIdx + 1] : "adf-graph";
 
 async function main() {
   console.log("Connecting to adf-graph...");
@@ -30,10 +31,21 @@ async function main() {
 
   const clientDir = resolve(__dirname, "../client");
   app.use(express.static(clientDir));
+  app.get("*", (_req, res) => {
+    res.sendFile(resolve(clientDir, "index.html"));
+  });
 
-  app.listen(port, () => {
+  const server = app.listen(port, () => {
     console.log(`adf-graph-ui running at http://localhost:${port}`);
   });
+
+  const shutdown = async () => {
+    server.close();
+    await client.disconnect();
+    process.exit(0);
+  };
+  process.on("SIGTERM", shutdown);
+  process.on("SIGINT", shutdown);
 }
 
 main().catch((err) => {

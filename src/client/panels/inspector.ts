@@ -28,10 +28,10 @@ export function initInspector(
           <div class="inspector-label">Incoming <span class="inspector-count">${incoming.length}</span></div>
           ${incoming.length === 0 ? '<div class="inspector-empty">—</div>' : ""}
           ${incoming.map((e: any) => `
-            <div class="inspector-connection" data-node-id="${e.fromId}">
+            <div class="inspector-connection" data-node-id="${escapeHtmlStatic(e.fromId)}">
               <span class="conn-arrow">←</span>
               <span class="conn-name" style="color:${NODE_COLORS[e.fromType] ?? "#ccc"}">${escapeHtml(e.from)}</span>
-              <span class="conn-edge-type">${e.type}</span>
+              <span class="conn-edge-type">${escapeHtmlStatic(e.type)}</span>
             </div>
           `).join("")}
         </div>
@@ -40,10 +40,10 @@ export function initInspector(
           <div class="inspector-label">Outgoing <span class="inspector-count">${outgoing.length}</span></div>
           ${outgoing.length === 0 ? '<div class="inspector-empty">—</div>' : ""}
           ${outgoing.map((e: any) => `
-            <div class="inspector-connection" data-node-id="${e.toId}">
+            <div class="inspector-connection" data-node-id="${escapeHtmlStatic(e.toId)}">
               <span class="conn-arrow">→</span>
               <span class="conn-name" style="color:${NODE_COLORS[e.toType] ?? "#ccc"}">${escapeHtml(e.to)}</span>
-              <span class="conn-edge-type">${e.type}</span>
+              <span class="conn-edge-type">${escapeHtmlStatic(e.type)}</span>
             </div>
           `).join("")}
         </div>
@@ -164,5 +164,6 @@ function escapeHtmlStatic(str: string): string {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
