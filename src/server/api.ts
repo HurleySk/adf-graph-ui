@@ -9,7 +9,8 @@ interface RawGraph {
   edges: Array<{ from: string; to: string; type: string; metadata: Record<string, unknown> }>;
 }
 
-function slimGraph(raw: RawGraph) {
+function slimGraph(raw: RawGraph | null) {
+  if (!raw) return null;
   const nodes = raw.nodes.filter((n) => n.type !== "dataverse_attribute");
   const nodeIds = new Set(nodes.map((n) => n.id));
   const edges = raw.edges.filter((e) => nodeIds.has(e.from) && nodeIds.has(e.to));

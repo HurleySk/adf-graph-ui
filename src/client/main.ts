@@ -36,7 +36,10 @@ function showNeighborhood(pipelineId: string): void {
   activeCy = renderNeighborhood(container, hood, currentDirection);
   (window as any).__cy = activeCy;
 
-  if (inspector) {
+  const inspectorEl = document.getElementById("inspector")!;
+  if (!inspector) {
+    inspector = initInspector(inspectorEl, activeCy);
+  } else {
     inspector.setCy(activeCy);
     inspector.hide();
   }
@@ -78,8 +81,6 @@ async function init() {
     buildLegend();
 
     const inspectorEl = document.getElementById("inspector")!;
-    const dummyCy = { on: () => {}, nodes: () => ({ filter: () => [] }) } as any;
-    inspector = initInspector(inspectorEl, dummyCy);
 
     const tree = buildPipelineTree(graphData);
 
@@ -109,11 +110,31 @@ async function init() {
         graphData = await fetchGraph(true);
         envEl.textContent = graphData.environment;
         statsEl.textContent = `${graphData.stats.nodeCount} nodes total`;
+
+        const newTree = buildPipelineTree(graphData);
+        const navEl = document.getElementById("navigator")!;
+        navEl.querySelector("#nav-list")!.innerHTML = "";
+        nav = initNavigator(navEl, newTree, (pipelineId: string) => {
+          showNeighborhood(pipelineId);
+          nav?.setActive(pipelineId);
+        });
+
+        if (activeCy) {
+          const center = activeCy.nodes(".center");
+          if (center.length > 0) {
+            showNeighborhood(center.first().id());
+            nav?.setActive(center.first().id());
+          }
+        }
       } finally {
         refreshBtn.classList.remove("spinning");
       }
     });
   } catch (err: any) {
+    const graphEmpty = document.getElementById("graph-empty");
+    if (graphEmpty) {
+      graphEmpty.innerHTML = `<div class="empty-hex" style="color:var(--signal-red)">✕</div><p>Failed to connect to adf-graph</p>`;
+    }
     statsEl.textContent = "Error";
     statusEl.textContent = "● Disconnected";
     statusEl.className = "disconnected";
