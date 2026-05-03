@@ -27,6 +27,7 @@ export function extractNeighborhood(
 
   const queue: Array<{ id: string; depth: number }> = [{ id: centerId, depth: 0 }];
 
+  // Walk outgoing edges via BFS
   while (queue.length > 0) {
     const { id, depth } = queue.shift()!;
     if (depth >= maxHops) continue;
@@ -37,12 +38,11 @@ export function extractNeighborhood(
         queue.push({ id: e.to, depth: depth + 1 });
       }
     }
-    for (const e of incoming.get(id) ?? []) {
-      if (!collected.has(e.from)) {
-        collected.add(e.from);
-        queue.push({ id: e.from, depth: depth + 1 });
-      }
-    }
+  }
+
+  // Add direct parents of center (1 hop incoming) — shown but not expanded
+  for (const e of incoming.get(centerId) ?? []) {
+    collected.add(e.from);
   }
 
   const nodes = data.nodes.filter((n) => collected.has(n.id));
